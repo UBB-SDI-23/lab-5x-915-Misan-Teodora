@@ -1,11 +1,6 @@
 package com.example.lab1.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,14 +10,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name= "meal_plan")
+@Table(name= "meal_plan", indexes = {@Index(name = "idx_person_id", columnList = "person_id")})
 public class MealPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "person_id")
-    private Integer person_id;
+    private Integer personId;
 
     @Column(name = "meal_id")
     private Integer meal_id;

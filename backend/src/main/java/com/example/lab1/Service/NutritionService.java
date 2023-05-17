@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,9 +28,8 @@ public class NutritionService {
     private final Repo nutritionRepo;
     private final RepoPers personRepo;
 
-    public List<Meal> getAllMeals() {
-        return StreamSupport.stream(nutritionRepo.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<Meal> getAllMeals(Pageable pageable) {
+        return nutritionRepo.findAll(pageable);
     }
 
     public MealWithPerson getByID(Integer id) {
@@ -37,9 +39,8 @@ public class NutritionService {
         return new MealWithPerson(meal.getId(), meal.getName(), meal.getType(), meal.getCalories(), meal.getNotes() ,person);
     }
 
-    public List<Meal> filter(Integer calories) {
-        return StreamSupport.stream(nutritionRepo.filterByCalories(calories.toString()).spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<Meal> filter(Integer calories, Pageable pageable) {
+        return nutritionRepo.filterByCalories(calories.toString(), pageable);
     }
 
     public ResponseEntity<Meal> add(Meal meal) {

@@ -1,18 +1,15 @@
 package com.example.lab1.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import java.util.Optional;
 
+import com.example.lab1.Model.dto.PersonMealPlan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,7 +22,6 @@ import com.example.lab1.Model.dto.PersonMeals;
 import com.example.lab1.Repository.Repo;
 import com.example.lab1.Repository.RepoMealPlan;
 import com.example.lab1.Repository.RepoPers;
-import com.google.protobuf.MapEntry;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +34,8 @@ public class PlanService {
     private final RepoPers persRepo;
     private final Repo mealRepo;
 
-    public List<MealPlan> getAllPlans() {
-        return StreamSupport.stream(planRepo.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<MealPlan> getAllPlans(Pageable pageable) {
+        return planRepo.findAll(pageable);
     }
 
     public ResponseEntity<MealPlan> getByID(Integer id) {
@@ -55,11 +50,11 @@ public class PlanService {
 
     public List<PersonMeals> statisticalFilter() {
         List<MealPlan> mealPlans = new ArrayList<>();
-        mealPlans = StreamSupport.stream(planRepo.findAll().spliterator(), false)
+        mealPlans = StreamSupport.stream(planRepo.findAll(Pageable.ofSize(10000)).spliterator(), false)
                         .collect(Collectors.toList());
 
         Map<Integer, List<MealPlan>> mealsGroupedByPerson =  mealPlans.stream()
-                .collect(Collectors.groupingBy(MealPlan::getPerson_id));
+                .collect(Collectors.groupingBy(MealPlan::getPersonId));
 
         List<PersonMeals> personsMeals = new ArrayList<>();
 
@@ -77,21 +72,20 @@ public class PlanService {
             .stream()
             .sorted((mealPlan1, mealPlan2) -> {
                 return mealPlan2.getMeals().size() - mealPlan1.getMeals().size();
-            })  
+            })
+            .limit(10)
             .toList();
     }
 
-    public List<AverageCalories> getStatisticalCalories() {
-        return StreamSupport.stream(persRepo.findAll().spliterator(), false)
+    public List<AverageCalories> getStatisticalCalories(Pageable pageable) {
+        return StreamSupport.stream(persRepo.findAll(pageable).spliterator(), false)
             .map(this::getAverageCaloriesByUser)
             .sorted((person1, person2) -> (int) (person1.getAverage() - person2.getAverage()))
             .toList();
     }
 
     public AverageCalories getAverageCaloriesByUser(Person person) {
-        List<MealPlan> mealPlans = StreamSupport.stream(planRepo.findAll().spliterator(), false)
-            .filter(mealPlan -> person.getId().equals(mealPlan.getPerson_id()))
-            .toList();
+        List<MealPlan> mealPlans = planRepo.findAllByPersonId(person.getId(), Pageable.unpaged()).getContent();
 
         List<String> mealNames = mealPlans.stream()
                                     .map(mealPlan -> mealRepo.findById(mealPlan.getMeal_id()).get().getName())
@@ -126,13 +120,11 @@ public class PlanService {
         planRepo.deleteById(id);
     }
 
-    public ResponseEntity<PersonMeals> getMealPlansByUserId(Integer id) {
+    public ResponseEntity<PersonMealPlan> getMealPlansByUserId(Integer id, Pageable pageable) {
 
-        List<Meal> meals = StreamSupport.stream(planRepo.findAll().spliterator(), false)
-                .filter(mealPlan -> id.equals(mealPlan.getPerson_id()))
-                .map(mealPlan -> mealRepo.findById(mealPlan.getMeal_id()).get())
-                .toList();
+        Page<Meal> meals = planRepo.findAllByPersonId(id, pageable)
+                .map(mealPlan -> mealRepo.findById(mealPlan.getMeal_id()).get());
 
-        return new ResponseEntity<>(new PersonMeals(id, "", meals), HttpStatus.OK);
+        return new ResponseEntity<>(new PersonMealPlan(id, "", meals), HttpStatus.OK);
     }
 }

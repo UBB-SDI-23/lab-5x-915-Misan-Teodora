@@ -1,16 +1,11 @@
 package com.example.lab1.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Data
-@Table(name= "meal")
+@Table(name= "meal", indexes = {@Index(name = "idx_person_id", columnList = "person_id")})
 public class Meal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

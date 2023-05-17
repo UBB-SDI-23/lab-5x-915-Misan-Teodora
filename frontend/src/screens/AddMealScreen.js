@@ -15,7 +15,7 @@ const AddMealScreen = () => {
     const calories = form.elements.calories.value;
     const recipe = form.elements.recipe.value;
     console.log(nameEx, type, calories, recipe);
-    const idUser = 5;
+    const idUser = 30;
 
     try {
       const response = await axios.post("/api/meal", {

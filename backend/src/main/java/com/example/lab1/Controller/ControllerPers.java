@@ -1,6 +1,11 @@
 package com.example.lab1.Controller;
 
 import java.util.List;
+
+import com.example.lab1.Model.dto.PersonMealPlan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,19 +31,14 @@ public class ControllerPers {
     @Autowired
     private PersonsService personsService;
 
-    @GetMapping("/status")
-    public String status() {
-        return "running";
-    }
-
     @GetMapping("")
-    public List<Person> getMeals() {
-        return personsService.getAllPersons();
+    public Page<Person> getMeals(@PageableDefault Pageable pageable) {
+        return personsService.getAllPersons(pageable);
     }
 
     @GetMapping("/{id}")
-    public PersonMeals getMealsPerPerson(@PathVariable Integer id) {
-        return personsService.getMealsPerPerson(id);
+    public PersonMealPlan getMealsPerPerson(@PathVariable Integer id, @PageableDefault Pageable pageable) {
+        return personsService.getMealsPerPerson(id, pageable);
     }
 
     // @GetMapping("/{id}")

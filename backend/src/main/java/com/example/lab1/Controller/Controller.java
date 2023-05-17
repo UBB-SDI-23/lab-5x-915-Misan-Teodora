@@ -5,6 +5,9 @@ import com.example.lab1.Model.Meal;
 import com.example.lab1.Model.dto.MealWithPerson;
 import com.example.lab1.Service.NutritionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +36,8 @@ public class Controller {
     }
 
     @GetMapping("")
-    public List<Meal> getMeals() {
-        return nutritionService.getAllMeals();
+    public Page<Meal> getMeals(@PageableDefault Pageable pageable) {
+        return nutritionService.getAllMeals(pageable);
     }
 
     @GetMapping("/{id}")
@@ -43,8 +46,8 @@ public class Controller {
     }
 
     @GetMapping("/filter/{calories}")
-    public List<Meal> filteringByCalories(@PathVariable Integer calories) {
-        return nutritionService.filter(calories);
+    public Page<Meal> filteringByCalories(@PathVariable Integer calories, @PageableDefault Pageable pageable) {
+        return nutritionService.filter(calories, pageable);
     }
 
     @PostMapping

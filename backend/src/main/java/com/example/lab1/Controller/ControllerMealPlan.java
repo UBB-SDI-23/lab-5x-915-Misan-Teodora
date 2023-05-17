@@ -4,8 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.lab1.Model.Meal;
+import com.example.lab1.Model.dto.PersonMealPlan;
 import com.example.lab1.Service.NutritionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lab1.Model.MealPlan;
-import com.example.lab1.Model.Person;
 import com.example.lab1.Model.dto.AverageCalories;
 import com.example.lab1.Model.dto.PersonMeals;
 import com.example.lab1.Service.PlanService;
@@ -35,14 +38,9 @@ public class ControllerMealPlan {
     @Autowired
     private NutritionService mealService;
 
-    @GetMapping("/status")
-    public String status() {
-        return "running";
-    }
-
     @GetMapping("")
-    public List<MealPlan> getMeals() {
-        return planService.getAllPlans();
+    public Page<MealPlan> getMeals(@PageableDefault Pageable pageable) {
+        return planService.getAllPlans(pageable);
     }
 
     @GetMapping("/filter")
@@ -51,8 +49,8 @@ public class ControllerMealPlan {
     }
 
     @GetMapping("/person/{id}")
-    public ResponseEntity<PersonMeals> getMealPlansPerPerson(@PathVariable Integer id) {
-        return planService.getMealPlansByUserId(id);
+    public ResponseEntity<PersonMealPlan> getMealPlansPerPerson(@PathVariable Integer id, @PageableDefault Pageable pageable) {
+        return planService.getMealPlansByUserId(id, pageable);
     }
 
 
@@ -60,7 +58,7 @@ public class ControllerMealPlan {
     public void setParticipants(@PathVariable Integer id, @RequestBody List<Meal> meals) {
         meals.forEach(meal ->
                         planService.add(MealPlan.builder()
-                                        .person_id(id)
+                                        .personId(id)
                                         .meal_id(meal.getId())
                                         .time_of_creation(LocalDateTime.now())
                                         .name("")
@@ -68,8 +66,8 @@ public class ControllerMealPlan {
     }
 
     @GetMapping("/average")
-    public List<AverageCalories> averageCal() {
-        return planService.getStatisticalCalories();
+    public List<AverageCalories> averageCal(@PageableDefault Pageable pageable) {
+        return planService.getStatisticalCalories(pageable);
     }
 
     @GetMapping("/{id}")

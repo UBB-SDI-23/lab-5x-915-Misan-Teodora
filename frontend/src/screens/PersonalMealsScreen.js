@@ -3,28 +3,67 @@ import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Meal from "../components/Meal";
 import axios from "../axios";
-import { Row, Col, Button, ToastContainer, Toast } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Button,
+  ToastContainer,
+  Toast,
+  ButtonGroup,
+  FormControl,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const PersonalMealsScreen = () => {
-  const [mealsOBJ, setMealsOBJ] = useState({});
+  const [mealsOBJ, setMealsOBJ] = useState([]);
+  const [nameUser, setNameUser] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const size = 3;
   const navigate = useNavigate();
-  const idUser = 5;
+  const idUser = 30;
 
   useEffect(() => {
     const fetchMeals = async () => {
-      const { data } = await axios.get(`/api/person/${idUser}`);
+      const { data } = await axios.get(
+        `/api/person/${idUser}?page=${page}&size=${size}`
+      );
 
-      setMealsOBJ(data);
+      setMealsOBJ(data.meals.content);
+      setNameUser(data.name);
+      setTotalPages(data.meals.totalPages);
     };
 
     fetchMeals();
-  }, []);
+  }, [page, size]);
+
+  // if (!mealsOBJ.meals.content) {
+  //   return <p>Loading</p>;
+  // }
 
   const handleToastClose = () => {
     setShowToast(false);
     window.location.reload();
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 0) {
+      setPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handlePageChange = (event) => {
+    const newPage = Number(event.target.value);
+    if (newPage >= 0 && newPage < totalPages) {
+      setPage(newPage);
+    }
   };
 
   const handleDeleteMeal = async (mealId) => {
@@ -46,9 +85,9 @@ const PersonalMealsScreen = () => {
         Go back
       </Link>
       <Row>
-        {mealsOBJ.meals?.length !== 0 ? (
+        {mealsOBJ?.length !== 0 ? (
           <Col md={9}>
-            <h1>{mealsOBJ.name}'s meals</h1>
+            <h1>{nameUser}'s meals</h1>
           </Col>
         ) : (
           <Col md={9}>
@@ -62,7 +101,7 @@ const PersonalMealsScreen = () => {
         </Col>
       </Row>
       <ListGroup className="center">
-        {mealsOBJ.meals?.map((meal, index) => (
+        {mealsOBJ?.map((meal, index) => (
           <ListGroup.Item key={meal.id}>
             <Meal meal={meal} />
             <Button variant="dark" onClick={() => handleDeleteMeal(meal.id)}>
@@ -78,6 +117,22 @@ const PersonalMealsScreen = () => {
           </ListGroup.Item>
         ))}
       </ListGroup>
+      <div className="d-flex justify-content-center">
+        <ButtonGroup>
+          <Button onClick={handlePreviousPage} disabled={page === 0}>
+            Previous
+          </Button>
+          <FormControl
+            type="number"
+            value={page}
+            onChange={handlePageChange}
+            style={{ width: "100px" }}
+          />
+          <Button onClick={handleNextPage} disabled={page === totalPages - 1}>
+            Next
+          </Button>
+        </ButtonGroup>
+      </div>
       <ToastContainer position="middle-center">
         {showToast && (
           <Toast onClose={handleToastClose}>

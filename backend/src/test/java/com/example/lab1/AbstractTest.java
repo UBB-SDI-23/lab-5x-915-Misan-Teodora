@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -100,7 +99,7 @@ public abstract class AbstractTest {
 
     protected static MealPlan getMealPlan(Integer i, Integer personId, Integer mealId){
         MealPlan mealPlan = new MealPlan();
-        mealPlan.setPerson_id(personId);
+        mealPlan.setPersonId(personId);
         mealPlan.setMeal_id(mealId);
         mealPlan.setName("meal plan " + i);
         mealPlan.setTime_of_creation(LocalDateTime.now());

@@ -1,5 +1,6 @@
 package com.example.lab1.Service;
 
+import com.example.lab1.Model.dto.PersonMealPlan;
 import com.example.lab1.Repository.Repo;
 import com.example.lab1.Repository.RepoPers;
 
@@ -11,6 +12,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,12 +29,9 @@ public class PersonsService {
     private final RepoPers personsRepo;
     private final Repo nutritionRepo;
 
-    public List<Person> getAllPersons() {
-        return StreamSupport.stream(personsRepo.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<Person> getAllPersons(Pageable pageable) {
+        return personsRepo.findAll(pageable);
     }
-
-    
 
     public ResponseEntity<Person> getByID(Integer id) {
         log.info("Get by id: {} invoked.", id);
@@ -43,11 +43,11 @@ public class PersonsService {
         return new ResponseEntity<>(person.get(), HttpStatus.OK);
     }
 
-    public PersonMeals getMealsPerPerson(Integer id) {
-        List<Meal> mealsPerperson =  StreamSupport.stream(nutritionRepo.findByPersonID(id.toString()).spliterator(), false)
-        .collect(Collectors.toList());
+    public PersonMealPlan getMealsPerPerson(Integer id, Pageable pageable) {
+        Page<Meal> mealsPerPerson =  nutritionRepo.findByPersonId(id, pageable);
+
         Person person = personsRepo.findById(id).orElseThrow();
-        return new PersonMeals(person.getId(), person.getName(), mealsPerperson);
+        return new PersonMealPlan(person.getId(), person.getName(), mealsPerPerson);
     }
 
     public ResponseEntity<Person> add(Person person) {

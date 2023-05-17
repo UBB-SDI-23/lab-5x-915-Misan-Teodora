@@ -18,7 +18,7 @@ const UpdateMealScreen = () => {
     const calories = form.elements.calories.value;
     const recipe = form.elements.recipe.value;
     console.log(nameEx, type, calories, recipe);
-    const idUser = 5;
+    const idUser = 30;
 
     // "id": 7,
     // "personId": 4,

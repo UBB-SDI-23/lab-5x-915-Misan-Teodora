@@ -1,5 +1,8 @@
 package com.example.lab1.Controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,14 +29,9 @@ public class ControllerPersonalData {
     @Autowired
     private PersonalDataService personsService;
 
-    @GetMapping("/status")
-    public String status() {
-        return "running";
-    }
-
     @GetMapping("")
-    public List<PersonData> getMeals() {
-        return personsService.getAllPersonalData();
+    public Page<PersonData> getAllPersonalData(@PageableDefault Pageable pageable) {
+        return personsService.getAllPersonalData(pageable);
     }
 
     @GetMapping("/{id}")

@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonalDataService {
     private final RepoPersonalData dataRepo;
 
-    public List<PersonData> getAllPersonalData() {
-        return StreamSupport.stream(dataRepo.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<PersonData> getAllPersonalData(Pageable pageable) {
+        return dataRepo.findAll(pageable);
     }
 
     public ResponseEntity<PersonData> getByID(Integer id) {

@@ -8,6 +8,7 @@ import PersonalMealsScreen from "./screens/PersonalMealsScreen";
 import MealPlanScreen from "./screens/MealPlanScreen";
 import AddMealScreen from "./screens/AddMealScreen";
 import UpdateMealScreen from "./screens/UpdateMealScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/meals/" element={<PersonalMealsScreen />} />
             <Route path="/addmeal/" element={<AddMealScreen />} />
             <Route path="/updatemeal/:id" element={<UpdateMealScreen />} />
+            <Route path="/login" element={<LoginScreen />} />
           </Routes>
         </Container>
       </main>

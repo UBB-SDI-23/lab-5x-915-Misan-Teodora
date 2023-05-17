@@ -8,7 +8,7 @@ const MealDescription = () => {
   const [showToast, setShowToast] = useState(false);
 
   const { id } = useParams();
-  const idUser = 5;
+  const idUser = 30;
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -24,7 +24,7 @@ const MealDescription = () => {
     // Make the POST request to your server
     try {
       const response = await axios.post("/api/plan", {
-        person_id: idUser,
+        personId: idUser,
         meal_id: id,
         name: "dinner",
       });
