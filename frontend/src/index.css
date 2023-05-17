@@ -1,0 +1,22 @@
+main {
+  min-height: 80vh;
+}
+
+h4 {
+  padding: 1rem 0;
+}
+
+.card-custom-width {
+  width: 1000px;
+}
+
+.card-separator {
+  border-color: #ddd;
+  border: 1px solid lightslategray;
+  /* width: 70%; */
+  margin: 0 auto;
+}
+
+.card-link {
+  text-decoration: none;
+}
