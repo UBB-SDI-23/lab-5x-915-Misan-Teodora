@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Meal from "../components/Meal";
-import axios from "axios";
+import axios from "../axios";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 

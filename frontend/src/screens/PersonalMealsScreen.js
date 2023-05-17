@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Meal from "../components/Meal";
-import axios from "axios";
+import axios from "../axios";
 import { Row, Col, Button, ToastContainer, Toast } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 

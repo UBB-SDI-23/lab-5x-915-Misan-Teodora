@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../axios";
 import { ToastContainer, Toast } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 

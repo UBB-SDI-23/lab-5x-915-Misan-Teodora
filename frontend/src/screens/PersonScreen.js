@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Person from "../components/Person";
-import axios from "axios";
+import axios from "../axios";
 import ListGroup from "react-bootstrap/ListGroup";
 
 const PersonScreen = () => {

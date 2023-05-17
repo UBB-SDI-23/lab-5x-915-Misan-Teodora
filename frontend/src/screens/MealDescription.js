@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../axios";
 import { Link, useParams } from "react-router-dom";
 import { Toast, ToastContainer } from "react-bootstrap";
 
