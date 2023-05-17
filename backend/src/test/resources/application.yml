@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:8.0.28:////sdi?useMysqlMetadata=true&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: root
+    password: password
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+      schemas:
+          - sdi
