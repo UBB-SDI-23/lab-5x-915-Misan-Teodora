@@ -1,11 +1,28 @@
 -- Create Persons
 DELIMITER $$
+CREATE PROCEDURE reset_tables()
+BEGIN
+  SET FOREIGN_KEY_CHECKS = 0;
+
+  TRUNCATE TABLE meal_plan;
+  TRUNCATE TABLE personal_data;
+  TRUNCATE TABLE meal;
+  TRUNCATE TABLE person;
+  
+  SET FOREIGN_KEY_CHECKS = 1;
+END$$
+DELIMITER ;
+
+-- Call the procedure to reset all tables
+CALL reset_tables();
+
+DELIMITER $$
 CREATE PROCEDURE generate_persons(IN person_count INT, IN start_value INT)
 BEGIN
   DECLARE i INT DEFAULT start_value;
   WHILE i < start_value + person_count DO
     INSERT INTO person (name, username, password, age, kg, height) 
-    VALUES (CONCAT('Name-', i), CONCAT('Username-', i), 'cryptedpassword', FLOOR(20 + RAND() * 50), FLOOR(50 + RAND() * 50), FLOOR(150 + RAND() * 50));
+    VALUES (CONCAT('Name-', i), CONCAT('Username-', i), '$2a$10$f2oac28mnKPrmm4Z0nhPkeTLg2jjC2hH356rlrl5nd9tlPJSqkryy', FLOOR(20 + RAND() * 50), FLOOR(50 + RAND() * 50), FLOOR(150 + RAND() * 50));
     SET i = i + 1;
   END WHILE;
 END$$
@@ -55,7 +72,6 @@ BEGIN
   END WHILE;
 END$$
 DELIMITER ;
-
 
 CALL generate_persons(10000, 0);
 CALL generate_meals(10000, 0);
