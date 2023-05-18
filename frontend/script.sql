@@ -33,9 +33,10 @@ DELIMITER $$
 CREATE PROCEDURE generate_meals(IN meal_count INT, IN start_value INT)
 BEGIN
   DECLARE i INT DEFAULT start_value;
+  DECLARE today VARCHAR(10) DEFAULT DATE_FORMAT(CURDATE(), '%d-%m-%Y');
   WHILE i < start_value + meal_count DO
     INSERT INTO meal (person_id, name, type, calories, date, notes) 
-    VALUES (i+1, CONCAT('MealName-', i), 'Dinner', FLOOR(500 + RAND() * 500), DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL -i DAY), '%d-%m-%Y'), CONCAT('Notes-', i));
+    VALUES (i+1, CONCAT('MealName-', i), 'Dinner', FLOOR(500 + RAND() * 500), today, CONCAT('Notes-', i));
     SET i = i + 1;
   END WHILE;
 END$$

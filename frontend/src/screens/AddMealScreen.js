@@ -10,6 +10,11 @@ const AddMealScreen = () => {
   const navigate = useNavigate();
   const userInfo = useContext(AuthContext).userInfo;
 
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, "0");
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const year = currentDate.getFullYear();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.target;
@@ -25,7 +30,7 @@ const AddMealScreen = () => {
         personId: userInfo.userId,
         type: type,
         calories: calories,
-        date: "23-03-2023",
+        date: `${day}-${month}-${year}`,
         notes: recipe,
       });
       console.log(response.status);
