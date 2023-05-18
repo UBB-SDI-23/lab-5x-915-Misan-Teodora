@@ -1,12 +1,8 @@
 package com.example.lab1.Model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.lab1.security.ERole;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -27,5 +23,15 @@ public class Person {
     private Integer kg;
 
     @Column(name="height")
-    private Integer height;    
+    private Integer height;
+
+    @Column(name="username")
+    private String username;
+
+    @Column(name="password")
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="role")
+    private ERole role = ERole.ROLE_USER; // default value
 }

@@ -9,6 +9,7 @@ import MealPlanScreen from "./screens/MealPlanScreen";
 import AddMealScreen from "./screens/AddMealScreen";
 import UpdateMealScreen from "./screens/UpdateMealScreen";
 import LoginScreen from "./screens/LoginScreen";
+import SignupScreen from "./screens/SignupScreen";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/addmeal/" element={<AddMealScreen />} />
             <Route path="/updatemeal/:id" element={<UpdateMealScreen />} />
             <Route path="/login" element={<LoginScreen />} />
+            <Route path="/signup" element={<SignupScreen />} />
           </Routes>
         </Container>
       </main>
