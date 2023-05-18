@@ -1,5 +1,6 @@
 package com.example.lab1.config.security.jwt;
 
+import com.example.lab1.Model.Person;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -33,8 +34,8 @@ public class JwtUtils {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, Person person) {
+        return generateToken(new HashMap<>(), userDetails, person);
     }
 
     // generates an activation code that is valid for 10 minutes
@@ -44,8 +45,11 @@ public class JwtUtils {
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserDetails userDetails,
+            Person person
     ) {
+        extraClaims.put("userId", person.getId());
+        extraClaims.put("role", person.getRole().name());
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 

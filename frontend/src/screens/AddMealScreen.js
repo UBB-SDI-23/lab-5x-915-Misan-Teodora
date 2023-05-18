@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "../axios";
 import { ToastContainer, Toast } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 
 const AddMealScreen = () => {
   const [showToast, setShowToast] = useState(false);
+  const [messageToast, setMessageToast] = useState("");
   const navigate = useNavigate();
+  const userInfo = useContext(AuthContext).userInfo;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,12 +18,11 @@ const AddMealScreen = () => {
     const calories = form.elements.calories.value;
     const recipe = form.elements.recipe.value;
     console.log(nameEx, type, calories, recipe);
-    const idUser = 30;
 
     try {
       const response = await axios.post("/api/meal", {
         name: nameEx,
-        personId: idUser,
+        personId: userInfo.userId,
         type: type,
         calories: calories,
         date: "23-03-2023",
@@ -28,11 +30,14 @@ const AddMealScreen = () => {
       });
       console.log(response.status);
       if (response.status === 201) {
+        setMessageToast("The Meal was created successfully!");
         setShowToast(true);
       }
 
       console.log(response.data);
     } catch (error) {
+      setMessageToast("The Meal could not be created!");
+      setShowToast(true);
       console.error(error);
     }
   };
@@ -108,10 +113,10 @@ const AddMealScreen = () => {
         {showToast && (
           <Toast onClose={handleToastClose}>
             <Toast.Header>
-              <strong className="me-auto">Success!</strong>
+              <strong className="me-auto">Message</strong>
               <small>Just now</small>
             </Toast.Header>
-            <Toast.Body>The Meal was created successfully!</Toast.Body>
+            <Toast.Body>{messageToast}</Toast.Body>
           </Toast>
         )}
       </ToastContainer>
@@ -120,10 +125,3 @@ const AddMealScreen = () => {
 };
 
 export default AddMealScreen;
-
-//      "name": "Salata Caesar",
-//     "personId": 3,
-//     "type": "breakfast",
-//     "calories": 1360,
-//     "date": "23-03-2023",
-//     "notes": "2 bucati pui, 2-3 fileuri de ansoa in ulei, 4-5 fire de ceapa, sare, piper"

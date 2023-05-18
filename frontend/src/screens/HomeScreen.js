@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Meal from "../components/Meal";
 import axios from "../axios";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Button, ButtonGroup, FormControl } from "react-bootstrap";
+import { AuthContext } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const HomeScreen = () => {
   const [meals, setMeals] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const navigate = useNavigate();
+  const userInfo = useContext(AuthContext).userInfo;
   const size = 5;
 
   useEffect(() => {
     const fetchMeals = async () => {
+      console.log(userInfo);
       const { data } = await axios.get(`/api/meal?page=${page}&size=${size}`);
 
       setMeals(data.content);
@@ -41,6 +46,8 @@ const HomeScreen = () => {
     }
   };
 
+  const editmeal = () => {};
+
   return (
     <>
       <h1>Meals</h1>
@@ -51,6 +58,11 @@ const HomeScreen = () => {
               <Link to={`/meal/${meal.id}`} className="card-link">
                 <Meal meal={meal} />
               </Link>
+              {userInfo !== null && userInfo.role === "ROLE_MODERATOR" ? (
+                <Button onClick={() => navigate(`/updatemeal/${meal.id}`)}>
+                  Edit
+                </Button>
+              ) : null}
             </ListGroup.Item>
           ))}
         </ListGroup>

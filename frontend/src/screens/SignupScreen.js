@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 import { Container, Card, Form, Button, Alert } from "react-bootstrap";
 
 const SignupScreen = () => {
+  const [name, setName] = useState("");
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+  const [age, setAge] = useState("");
+  const [kg, setKg] = useState("");
+  const [height, setHeight] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -31,6 +37,60 @@ const SignupScreen = () => {
           {error && <Alert variant="danger">{error}</Alert>}
 
           <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="formName">
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control
+                placeholder="Enter full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formContry">
+              <Form.Label>Contry</Form.Label>
+              <Form.Control
+                placeholder="Enter country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formCity">
+              <Form.Label>City</Form.Label>
+              <Form.Control
+                placeholder="Enter city"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formAge">
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control
+                placeholder="Enter age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formKg">
+              <Form.Label>Kilograms</Form.Label>
+              <Form.Control
+                placeholder="Enter kilograms"
+                value={kg}
+                onChange={(e) => setKg(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formHeight">
+              <Form.Label>Height</Form.Label>
+              <Form.Control
+                placeholder="Enter height"
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+              />
+            </Form.Group>
+
             <Form.Group controlId="formEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control

@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "../axios";
 import { ListGroup, Button, ButtonGroup, FormControl } from "react-bootstrap";
 import Meal from "../components/Meal";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 
 const MealPlanScreen = () => {
   const [mealPlan, setMealPlan] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const size = 3;
-  const idUser = 30;
+  const userInfo = useContext(AuthContext).userInfo;
 
   useEffect(() => {
+    console.log(userInfo);
     const fetchMeals = async () => {
       const { data } = await axios.get(
-        `/api/plan/person/${idUser}?page=${page}&size=${size}`
+        `/api/plan/person/${userInfo.userId}?page=${page}&size=${size}`
       );
 
       setMealPlan(data.meals.content);

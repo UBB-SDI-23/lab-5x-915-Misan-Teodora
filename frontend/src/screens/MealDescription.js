@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "../axios";
 import { Link, useParams } from "react-router-dom";
 import { Toast, ToastContainer } from "react-bootstrap";
+import { AuthContext } from "../AuthContext";
 
 const MealDescription = () => {
   const [mealsOBJ, setMealsOBJ] = useState({});
   const [showToast, setShowToast] = useState(false);
 
   const { id } = useParams();
-  const idUser = 30;
+  const userInfo = useContext(AuthContext).userInfo;
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -24,7 +25,7 @@ const MealDescription = () => {
     // Make the POST request to your server
     try {
       const response = await axios.post("/api/plan", {
-        personId: idUser,
+        personId: userInfo.userId,
         meal_id: id,
         name: "dinner",
       });

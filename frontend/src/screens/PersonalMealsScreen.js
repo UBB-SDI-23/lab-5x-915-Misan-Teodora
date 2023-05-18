@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Meal from "../components/Meal";
@@ -13,21 +13,25 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 
 const PersonalMealsScreen = () => {
   const [mealsOBJ, setMealsOBJ] = useState([]);
   const [nameUser, setNameUser] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [messageToast, setMessageToast] = useState("");
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const size = 3;
   const navigate = useNavigate();
-  const idUser = 30;
+  const userInfo = useContext(AuthContext).userInfo;
 
   useEffect(() => {
+    console.log(userInfo);
+
     const fetchMeals = async () => {
       const { data } = await axios.get(
-        `/api/person/${idUser}?page=${page}&size=${size}`
+        `/api/person/${userInfo.userId}?page=${page}&size=${size}`
       );
 
       setMealsOBJ(data.meals.content);
@@ -72,9 +76,12 @@ const PersonalMealsScreen = () => {
 
       console.log(result.status);
       if (result.status === 204) {
+        setMessageToast("The Meal was deleted successfully!");
         setShowToast(true);
       }
     } catch (error) {
+      setMessageToast("The Meal could not be deleted!");
+      setShowToast(true);
       console.error(error);
     }
   };
@@ -137,10 +144,10 @@ const PersonalMealsScreen = () => {
         {showToast && (
           <Toast onClose={handleToastClose}>
             <Toast.Header>
-              <strong className="me-auto">Success!</strong>
+              <strong className="me-auto">Message</strong>
               <small>Just now</small>
             </Toast.Header>
-            <Toast.Body>The Meal was deleted successfully!</Toast.Body>
+            <Toast.Body>{messageToast}</Toast.Body>
           </Toast>
         )}
       </ToastContainer>

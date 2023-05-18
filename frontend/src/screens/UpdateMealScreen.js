@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "../axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Toast, ToastContainer } from "react-bootstrap";
+import { AuthContext } from "../AuthContext";
 
 const UpdateMealScreen = () => {
   const { id } = useParams();
   const [meal, setMeal] = useState({});
   const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
+  const userInfo = useContext(AuthContext).userInfo;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,20 +20,11 @@ const UpdateMealScreen = () => {
     const calories = form.elements.calories.value;
     const recipe = form.elements.recipe.value;
     console.log(nameEx, type, calories, recipe);
-    const idUser = 30;
-
-    // "id": 7,
-    // "personId": 4,
-    // "name": "Omleta cu sunca si cascaval",
-    // "type": "breakfast",
-    // "calories": 600,
-    // "date": "15-03-2023",
-    // "notes": "3 oua, 2-3 felii de sunca, 150gr cascaval, 3 linguri smantana, 15gr unt, sare, piper"
 
     try {
       const response = await axios.put("/api/meal", {
         id: id,
-        personId: idUser,
+        personId: userInfo.userId,
         name: nameEx,
         type: type,
         calories: calories,
